@@ -67,14 +67,6 @@ void AXP192Component::begin(bool disableLDO2, bool disableLDO3, bool disableRTC,
         Write1Byte(0x28, 0xcc);
         break;
     }
-    case AXP192_M5TOUGH:
-    {
-        // Set DCDC3 (TFT_LED & TFT) 3.0V
-        Write1Byte(0x27, 0xcc);
-        // Set LDO2 & LDO3(TFT_LED & TFT) 3.0V
-        Write1Byte(0x28, 0xcc);
-        break;
-    }
   }
 
     // Set ADC sample rate to 200hz
@@ -220,12 +212,6 @@ void AXP192Component::UpdateBrightness()
         break;
       }
       case AXP192_M5CORE2:
-      {
-        uint8_t buf = Read8bit( 0x27 );
-        Write1Byte( 0x27 , ((buf & 0x80) | (ubri << 3)) );
-        break;
-      }
-      case AXP192_M5TOUGH:
       {
         uint8_t buf = Read8bit( 0x27 );
         Write1Byte( 0x27 , ((buf & 0x80) | (ubri << 3)) );
