@@ -1,7 +1,6 @@
 #include "axp192.h"
 #include "esphome/core/log.h"
 #include "esp_sleep.h"
-#include <Esp.h>
 
 namespace esphome {
 namespace axp192 {
@@ -19,20 +18,6 @@ void AXP192Component::setup()
     {
         // disable LDO3 Vibration
         begin(false, true, false, false, false);
-        break;
-    }
-    case AXP192_M5TOUGH:
-    {
-        begin(false, false, false, false, false);
-
-        // If we're waking from a cold boot
-        if (GetStartupReason() == "ESP_RST_POWERON")
-        {
-            ESP_LOGD(TAG, "First power on, restarting ESP...");
-
-            // Reboot the ESP with the axp initialised
-            ESP.restart();
-        }
         break;
     }
   }
@@ -82,14 +67,6 @@ void AXP192Component::begin(bool disableLDO2, bool disableLDO3, bool disableRTC,
         break;
     }
     case AXP192_M5CORE2:
-    {
-        // Set DCDC3 (TFT_LED & TFT) 3.0V
-        Write1Byte(0x27, 0xcc);
-        // Set LDO2 & LDO3(TFT_LED & TFT) 3.0V
-        Write1Byte(0x28, 0xcc);
-        break;
-    }
-    case AXP192_M5TOUGH:
     {
         // Set DCDC3 (TFT_LED & TFT) 3.0V
         Write1Byte(0x27, 0xcc);
@@ -247,12 +224,6 @@ void AXP192Component::UpdateBrightness()
         break;
       }
       case AXP192_M5CORE2:
-      {
-        uint8_t buf = Read8bit( 0x27 );
-        Write1Byte( 0x27 , ((buf & 0x80) | (ubri << 3)) );
-        break;
-      }
-      case AXP192_M5TOUGH:
       {
         uint8_t buf = Read8bit( 0x27 );
         Write1Byte( 0x27 , ((buf & 0x80) | (ubri << 3)) );
